@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from 'react'
 import { IoArrowBackCircle } from "react-icons/io5";
-import { useNavigate, useOutletContext, useParams } from 'react-router-dom';
-import { getJSONFromLocalStorage, saveJSONToLocalStorage } from '../helper/localStorageHandler';
+import { Navigate, useNavigate, useOutletContext, useParams } from 'react-router-dom';
+import { getIsLogin, getJSONFromLocalStorage, saveJSONToLocalStorage } from '../helper/localStorageHandler';
 
 const ProductDetail = () => {
+  const isLoggedIn = getIsLogin();
   const navigate = useNavigate();
   const { productId } = useParams();
   const [product, setProduct] = useState({});
@@ -29,13 +30,12 @@ const ProductDetail = () => {
   }
   
 
-  return (
+  return !isLoggedIn ? <Navigate to='/signinup' replace /> : (
     <section className="pt-[450px] md:pt-32 pb-[400px] md:pb-12 lg:py-32 max-h-screen flex flex-col items-center relative">
-        <div className="w-[100vw] pl-20">
+        <div className="w-[100vw] pl-20" onClick={() => navigate('..')}>
           <IoArrowBackCircle
             className="text-primary cursor-pointer"
             size={40}
-            onClick={() => navigate('..')}
           />
         </div>
         <div className="container mx-auto">

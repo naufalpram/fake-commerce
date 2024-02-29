@@ -1,15 +1,15 @@
 import React, { useEffect, useMemo, useState } from 'react'
 import { BsBag } from "react-icons/bs";
 import { CiLogout } from "react-icons/ci";
-import { Outlet } from 'react-router-dom';
+import { Outlet, useNavigate } from 'react-router-dom';
 import Sidebar from './Sidebar';
-import { getJSONFromLocalStorage } from '../helper/localStorageHandler';
+import { getJSONFromLocalStorage, removeLoginState } from '../helper/localStorageHandler';
 
 const Header = () => {
   const [isSticky, setIsSticky] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const [cart, setCart] = useState(getJSONFromLocalStorage('cart'));
-  
+  const navigate = useNavigate();
 
   const handleOpen = () => {
     setIsOpen(current => !current);
@@ -28,6 +28,11 @@ const Header = () => {
     return cart.reduce((acc, item) => acc + item.quantity, 0);
   };
   const totalQuantity = useMemo(() => getTotalQuantity(), [cart]);
+
+  const handleLogout = () => {
+    removeLoginState();
+    navigate('/signinup');
+  }
 
   return (
     <div className='flex'>
@@ -55,7 +60,7 @@ const Header = () => {
             </div>
           </div>
           <div className="cursor-pointer flex relative">
-            <CiLogout className="text-3xl" />
+            <CiLogout className="text-3xl" onClick={handleLogout} />
           </div>
         </div>
       </div>

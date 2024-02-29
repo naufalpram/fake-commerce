@@ -79,8 +79,11 @@ const Sidebar = ({ isOpen, handleClose, cart, setCart }) => {
             <div className="font-semibold">
               <span className="mr-2">Subtotal:</span> $ {parseFloat(subTotal).toFixed(2)}
             </div>
-            <div className="cursor-pointer py-4 bg-red-500 text-white w-12 h-12 flex justify-center items-center text-xl">
-              <FiTrash2 onClick={handleClearCart} />
+            <div
+                className="cursor-pointer py-4 bg-red-500 text-white w-12 h-12 flex justify-center items-center text-xl"
+                onClick={handleClearCart}
+            >
+              <FiTrash2 />
             </div>
           </div>
           <button className="bg-primary flex p-3 justify-center items-center text-white w-full font-medium" onClick={handleCheckout}>

@@ -15,4 +15,20 @@ const removeFromLocalStorage = (key) => {
     localStorage.removeItem(key);
 }
 
-export { getJSONFromLocalStorage, saveJSONToLocalStorage, removeFromLocalStorage };
+const getIsLogin = () => {
+    return localStorage.getItem('isLogin') || false;
+}
+
+const setLoginState = (username) => {
+    localStorage.setItem('isLogin', true);
+    localStorage.setItem('user', JSON.stringify({username: username}));
+}
+
+const removeLoginState = () => {
+    localStorage.removeItem('isLogin');
+    localStorage.removeItem('user');
+    localStorage.removeItem('products');
+    localStorage.removeItem('cart');
+}
+
+export { getJSONFromLocalStorage, saveJSONToLocalStorage, removeFromLocalStorage, getIsLogin, setLoginState, removeLoginState };

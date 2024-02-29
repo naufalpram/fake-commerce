@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from 'react';
-import ProductCard from '../components/ProductCard';
 import axios from 'axios';
-import { useOutletContext } from 'react-router-dom';
-import { getJSONFromLocalStorage, saveJSONToLocalStorage } from '../helper/localStorageHandler';
+import { Navigate, useOutletContext } from 'react-router-dom';
+import { getIsLogin, getJSONFromLocalStorage, saveJSONToLocalStorage } from '../helper/localStorageHandler';
 import Products from '../components/Products';
 
 const Home = () => {
+  const isLoggedIn = getIsLogin();
   const [products, setProducts] = useState(getJSONFromLocalStorage('products'));
   const [cart, setCart] = useOutletContext();
   const [totalPages, setTotalPages] = useState(1);
@@ -61,7 +61,7 @@ const Home = () => {
     }
   };
   
-  return (
+  return !isLoggedIn ? <Navigate to='/signinup' replace /> : (
     <div className="w-[100vw]">
         <section className="h-[800px] bg-hero bg-no-repeat bg-cover bg-center py-20">
           <div className="container mx-auto flex justify-around h-full">

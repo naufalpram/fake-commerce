@@ -1,10 +1,15 @@
 import React, { useState } from 'react';
+import { getIsLogin, setLoginState } from '../helper/localStorageHandler';
+import axios from 'axios';
+import { Navigate } from 'react-router-dom';
 
 const SignInUp = () => {
+  const isLoggedIn = getIsLogin();
   const [isSignUp, setIsSignUp] = useState(false);
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [email, setEmail] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleSwipePanel = () => {
     setIsSignUp(current => !current);
@@ -12,8 +17,49 @@ const SignInUp = () => {
     setPassword('');
     setEmail('');
   }
-  return (
-    <>
+
+  const handleSignIn = async () => {
+    setIsLoading(true);
+    try {
+      const userData = {
+        username: username,
+        password: password
+      }
+      const { data, status } = await axios.post('https://fakestoreapi.com/auth/login', userData);
+      if (data && status === 200) {
+        setLoginState(username);
+        
+      } else
+        throw new Error('Sign in failed');
+    } catch(err) {
+      console.log(err.message);
+    } finally {
+      setIsLoading(false);
+    }
+  }
+
+  const handleSignUp = async () => {
+    setIsLoading(true);
+    try {
+      const userData = {
+        username: username,
+        email: email,
+        password: password
+      }
+      const { data, status } = await axios.post('https://fakestoreapi.com/users', userData);
+      if (data && status === 200) {
+        setLoginState(username);
+        console.log(data)
+      } else
+        throw new Error('Sign up failed');
+    } catch(err) {
+      console.log(err.message);
+    } finally {
+      setIsLoading(false);
+    }
+  }
+
+  return isLoggedIn ? <Navigate to='/' replace /> : (
     <div className="signinup-container" style={{ display: "block" }}>
         <link
           rel="stylesheet"
@@ -61,7 +107,13 @@ const SignInUp = () => {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
               />
-              <button className='button' disabled={username === '' || email === '' || password === ''}>{"Sign Up"}</button>
+              <button
+                className='button'
+                disabled={(username === '' || email === '' || password === '') || isLoading}
+                onClick={handleSignUp}
+              >
+                {isLoading ? "Loading..." : "Sign Up"}
+              </button>
             </form>
           </div>
           <div className="form-container sign-in-container">
@@ -84,7 +136,13 @@ const SignInUp = () => {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
               />
-              <button className='button' disabled={username === '' || password === ''}>{"Sign In"}</button>
+              <button
+                className='button'
+                disabled={(username === '' || password === '') || isLoading}
+                onClick={handleSignIn}
+              >
+                {isLoading ? "Loading..." : "Sign In"}
+              </button>
             </form>
           </div>
           <div className="overlay-container">
@@ -105,7 +163,6 @@ const SignInUp = () => {
           </div>
         </div>
     </div>
-    </>
   )
 }
 
