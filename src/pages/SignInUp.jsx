@@ -1,15 +1,19 @@
 import React, { useState } from 'react';
 import { getIsLogin, setLoginState } from '../helper/localStorageHandler';
 import axios from 'axios';
-import { Navigate } from 'react-router-dom';
+import { Navigate, useNavigate } from 'react-router-dom';
+import Toast from '../components/Toast';
 
 const SignInUp = () => {
   const isLoggedIn = getIsLogin();
+  const navigate = useNavigate();
   const [isSignUp, setIsSignUp] = useState(false);
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [email, setEmail] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [toastError, setToastError] = useState(false);
+  const [toastMessage, setToastMessage] = useState('');
 
   const handleSwipePanel = () => {
     setIsSignUp(current => !current);
@@ -28,11 +32,12 @@ const SignInUp = () => {
       const { data, status } = await axios.post('https://fakestoreapi.com/auth/login', userData);
       if (data && status === 200) {
         setLoginState(username);
-        
-      } else
-        throw new Error('Sign in failed');
+        navigate('/?success=true');
+      } else {
+        handleToastUp(`Error during signin: Request failed with status code ${status.code}`);
+      }
     } catch(err) {
-      console.log(err.message);
+      handleToastUp(`Error during signin: ${err.message}`);
     } finally {
       setIsLoading(false);
     }
@@ -49,17 +54,27 @@ const SignInUp = () => {
       const { data, status } = await axios.post('https://fakestoreapi.com/users', userData);
       if (data && status === 200) {
         setLoginState(username);
-        console.log(data)
+        navigate('/?success=true&signup=true');
       } else
         throw new Error('Sign up failed');
     } catch(err) {
-      console.log(err.message);
+      handleToastUp(`Error during signin: ${err.message}`);
     } finally {
       setIsLoading(false);
     }
   }
 
+  const handleToastUp = (message) => {
+    setToastMessage(message);
+    setToastError(true);
+    setTimeout(() => {
+      setToastError(false);
+      setToastMessage('');
+    }, 5000);
+  }
+
   return isLoggedIn ? <Navigate to='/' replace /> : (
+    <>
     <div className="signinup-container" style={{ display: "block" }}>
         <link
           rel="stylesheet"
@@ -163,6 +178,8 @@ const SignInUp = () => {
           </div>
         </div>
     </div>
+    {toastError && toastMessage && <Toast failed={toastError} message={toastMessage} />}
+    </>
   )
 }
 

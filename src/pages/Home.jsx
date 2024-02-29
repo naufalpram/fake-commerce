@@ -1,11 +1,16 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import { Navigate, useOutletContext } from 'react-router-dom';
+import { Navigate, useLocation, useOutletContext, useNavigate } from 'react-router-dom';
 import { getIsLogin, getJSONFromLocalStorage, saveJSONToLocalStorage } from '../helper/localStorageHandler';
 import Products from '../components/Products';
+import Toast from '../components/Toast';
 
 const Home = () => {
   const isLoggedIn = getIsLogin();
+  const location = useLocation();
+  const navigate = useNavigate();
+  const [toastSuccess, setToastSuccess] = useState(false);
+  const [toastMessage, setToastMessage] = useState('');
   const [products, setProducts] = useState(getJSONFromLocalStorage('products'));
   const [cart, setCart] = useOutletContext();
   const [totalPages, setTotalPages] = useState(1);
@@ -21,8 +26,14 @@ const Home = () => {
     return duplicatedProducts;
   }
   
-  
   useEffect(() => {
+    const success = new URLSearchParams(location.search).get('success');
+    const signup = new URLSearchParams(location.search).get('signup');
+    if (success) {
+      signup === 'true' ? handleToastUp('Sign up successful') : handleToastUp('Sign in successful');
+      navigate(location.pathname, { replace: true });
+    }
+    
     const fetchProducts = async () => {
         try {
             const { data } = await axios.get('https://fakestoreapi.com/products')
@@ -60,9 +71,20 @@ const Home = () => {
       });
     }
   };
+
+  const handleToastUp = (message) => {
+    setToastMessage(message);
+    setToastSuccess(true);
+    setTimeout(() => {
+      setToastSuccess(false);
+      setToastMessage('');
+    }, 5000);
+  }
   
   return !isLoggedIn ? <Navigate to='/signinup' replace /> : (
-    <div className="w-[100vw]">
+    <>
+    {toastSuccess && toastMessage && <Toast success={toastSuccess} message={toastMessage} />}
+    <div className="w-[100vw] relative">
         <section className="h-[800px] bg-hero bg-no-repeat bg-cover bg-center py-20">
           <div className="container mx-auto flex justify-around h-full">
             <div className="flex flex-col justify-center">
@@ -92,6 +114,7 @@ const Home = () => {
           </div>
         </section>
     </div>
+    </>
   )
 }
 

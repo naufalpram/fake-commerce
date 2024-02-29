@@ -44,7 +44,7 @@ const ProductDetail = () => {
               <img
                 className="max-w-[200px] lg:max-w-xs"
                 src={product.image}
-                alt=""
+                alt={`${product.title} image`}
               />
             </div>
             <div className="flex-1 text-center lg:text-left">
