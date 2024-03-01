@@ -1,12 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { Navigate, useLocation, useOutletContext, useNavigate } from 'react-router-dom';
-import { getIsLogin, getJSONFromLocalStorage, saveJSONToLocalStorage } from '../helper/localStorageHandler';
+import { getJSONFromLocalStorage, saveJSONToLocalStorage } from '../helper/localStorageHandler';
 import Products from '../components/Products';
 import Toast from '../components/Toast';
 
 const Home = () => {
-  const isLoggedIn = getIsLogin();
   const location = useLocation();
   const navigate = useNavigate();
   const [toastSuccess, setToastSuccess] = useState(false);
@@ -81,7 +80,7 @@ const Home = () => {
     }, 5000);
   }
   
-  return !isLoggedIn ? <Navigate to='/signinup' replace /> : (
+  return (
     <>
     {toastSuccess && toastMessage && <Toast success={toastSuccess} message={toastMessage} />}
     <div className="w-[100vw] relative">

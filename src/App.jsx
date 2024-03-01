@@ -4,6 +4,7 @@ import SignInUp from "./pages/SignInUp";
 import Home from "./pages/Home";
 import ProductDetail from "./pages/ProductDetail";
 import Layout from "./components/Layout";
+import ProtectedRoute from "./components/route/ProtectedRoute";
 
 const App = () => {
   const router = createBrowserRouter([
@@ -17,11 +18,19 @@ const App = () => {
       children: [
         {
           index: true,
-          element: <Home />
+          element: (
+            <ProtectedRoute>
+              <Home />
+            </ProtectedRoute>
+          )
         },
         {
           path: 'products/:productId',
-          element: <ProductDetail />
+          element: (
+            <ProtectedRoute>
+              <ProductDetail />
+            </ProtectedRoute>
+          )
         }
       ]
     }

@@ -30,7 +30,7 @@ const ProductDetail = () => {
   }
   
 
-  return !isLoggedIn ? <Navigate to='/signinup' replace /> : (
+  return (
     <section className="pt-[450px] md:pt-32 pb-[400px] md:pb-12 lg:py-32 max-h-screen flex flex-col items-center relative">
         <div className="w-[100vw] pl-20" onClick={() => navigate('..')}>
           <IoArrowBackCircle
