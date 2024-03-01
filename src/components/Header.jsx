@@ -1,41 +1,9 @@
-import React, { useEffect, useMemo, useState } from 'react'
-import { BsBag } from "react-icons/bs";
-import { CiLogout } from "react-icons/ci";
-import { Outlet, useNavigate } from 'react-router-dom';
-import Sidebar from './Sidebar';
-import { getJSONFromLocalStorage, removeLoginState } from '../helper/localStorageHandler';
+import React from 'react'
+import { BsBag } from 'react-icons/bs'
+import { CiLogout } from 'react-icons/ci'
 
-const Header = () => {
-  const [isSticky, setIsSticky] = useState(false);
-  const [isOpen, setIsOpen] = useState(false);
-  const [cart, setCart] = useState(getJSONFromLocalStorage('cart'));
-  const navigate = useNavigate();
-
-  const handleOpen = () => {
-    setIsOpen(current => !current);
-  }
-  useEffect(() => {
-    const handleScroll = () => {
-      setIsSticky(window.scrollY > 64);
-    };
-
-    window.addEventListener('scroll', handleScroll);
-
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
-
-  const getTotalQuantity = () => {
-    return cart.reduce((acc, item) => acc + item.quantity, 0);
-  };
-  const totalQuantity = useMemo(() => getTotalQuantity(), [cart]);
-
-  const handleLogout = () => {
-    removeLoginState();
-    navigate('/signinup');
-  }
-
+const Header = ({ isSticky, handleOpen, handleLogout, totalQuantity }) => {
   return (
-    <div className='flex'>
     <header
       className={
         `${isSticky ? 'bg-white py-4 shadow-md' : 'bg-none py-6'} fixed w-full z-10 lg:px-8 transition-all`
@@ -65,9 +33,6 @@ const Header = () => {
         </div>
       </div>
     </header>
-    <Sidebar isOpen={isOpen} handleClose={handleOpen} cart={cart} setCart={setCart} />
-    <Outlet context={[cart, setCart]} />
-    </div>
   )
 }
 

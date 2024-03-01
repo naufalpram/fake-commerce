@@ -16,16 +16,14 @@ const removeFromLocalStorage = (key) => {
 }
 
 const getIsLogin = () => {
-    return localStorage.getItem('isLogin') || false;
+    return localStorage.getItem('user');
 }
 
 const setLoginState = (username) => {
-    localStorage.setItem('isLogin', true);
     localStorage.setItem('user', JSON.stringify({username: username}));
 }
 
 const removeLoginState = () => {
-    localStorage.removeItem('isLogin');
     localStorage.removeItem('user');
     localStorage.removeItem('products');
     localStorage.removeItem('cart');

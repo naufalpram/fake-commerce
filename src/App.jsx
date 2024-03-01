@@ -3,7 +3,7 @@ import "./App.css";
 import SignInUp from "./pages/SignInUp";
 import Home from "./pages/Home";
 import ProductDetail from "./pages/ProductDetail";
-import Header from "./components/Header";
+import Layout from "./components/Layout";
 
 const App = () => {
   const router = createBrowserRouter([
@@ -13,7 +13,7 @@ const App = () => {
     },
     {
       path: '/',
-      element: <Header />,
+      element: <Layout />,
       children: [
         {
           index: true,
